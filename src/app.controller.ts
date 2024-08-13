@@ -19,6 +19,16 @@ export class AppController {
   traerdatosusuario(@Body() body: any) {
     return this.appService.traerDatosUsuario(body);
   }
+
+  @Post('/traerdatossector')
+  traerdatossector(@Body() body: any) {
+    return this.appService.traerDatosSector(body);
+  }
+
+  @Post('/traersectoresporusuario')
+  traersectoresporusuario(@Body() body: any) {
+    return this.appService.traersectoresporusuario(body);
+  }
   @Post('/traerclasestramites')
   traerclasestramites(@Body() body: any) {
     return this.appService.traerClasesTramites(body);

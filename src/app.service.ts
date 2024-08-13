@@ -39,11 +39,43 @@ export class AppService {
     }
   }
 
-  traerDatosUsuario(body: any) {
+  async traerDatosUsuario(body: any) {
     console.log(body);
-    return 'desde traer datos usuario';
+    const { idUsuario } = body;
+    try {
+      let consulta = `SELECT nombre FROM usuarios WHERE idUsuario = ${idUsuario}`;
+      await sql.connect(config);
+      const result = await sql.query(consulta);
+      return result.recordsets[0];
+    } catch (err) {
+      return err;
+    }
   }
 
+  async traerDatosSector(body: any) {
+    const { idSector } = body;
+    try {
+      let consulta = `SELECT sectorDescripcion FROM sectores WHERE idSector = ${idSector}`;
+      await sql.connect(config);
+      const result = await sql.query(consulta);
+      return result.recordsets[0];
+    } catch (err) {
+      return err;
+    }
+  }
+
+  async traersectoresporusuario(body: any) {
+    console.log('idUsuario :', body);
+    const { idUsuario } = body;
+    try {
+      let consulta = `select sectores.idSector,sectores.sectorDescripcion from usuariosXSector inner join sectores on usuariosXSector.idSector = sectores.idSector where idUsuario = ${idUsuario}`;
+      await sql.connect(config);
+      const result = await sql.query(consulta);
+      return result.recordsets[0];
+    } catch (err) {
+      return err;
+    }
+  }
   async traerClasesTramites(body: any) {
     try {
       let consulta = 'select * from claseTramites';
