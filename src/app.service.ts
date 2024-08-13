@@ -23,6 +23,27 @@ export class AppService {
     return 'desde el servicio de gestion de tramites';
   }
 
+  async login(body: any) {
+    console.log(body);
+    const { usuario, contraseña } = body;
+    try {
+      let consulta = `select  *
+  FROM [GestionTramites].[dbo].[usuarios] where usuario ='${usuario}' and contraseña = '${contraseña}'`;
+      await sql.connect(config);
+      const result = await sql.query(consulta);
+      console.log(result.recordsets[0]);
+      return result.recordsets[0];
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  }
+
+  traerDatosUsuario(body: any) {
+    console.log(body);
+    return 'desde traer datos usuario';
+  }
+
   async traerClasesTramites(body: any) {
     try {
       let consulta = 'select * from claseTramites';
@@ -42,5 +63,13 @@ export class AppService {
     } catch (err) {
       return err;
     }
+  }
+
+  nuevoTramite(body: any) {
+    return 'desde el servicio nuevo tramite';
+  }
+
+  nuevoPase(body: any) {
+    return 'desde el servicio nuevo pase';
   }
 }
