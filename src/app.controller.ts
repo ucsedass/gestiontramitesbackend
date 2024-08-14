@@ -34,7 +34,7 @@ export class AppController {
     return this.appService.traerClasesTramites(body);
   }
 
-  @Post('/traertipotramites')
+  @Post('/traertipostramites')
   traerTipoTramite(@Body() body: any) {
     return this.appService.traerTipoTramites(body);
   }

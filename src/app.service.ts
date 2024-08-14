@@ -87,8 +87,10 @@ export class AppService {
     }
   }
   async traerTipoTramites(body: any) {
+    const { idClaseTramite } = body;
+    console.log(body);
     try {
-      let consulta = 'select * from tipoTramites';
+      let consulta = `SELECT * FROM tipoTramites WHERE idClaseTramite = ${idClaseTramite}`;
       await sql.connect(config);
       const result = await sql.query(consulta);
       return result.recordsets[0];
