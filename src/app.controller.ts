@@ -39,6 +39,11 @@ export class AppController {
     return this.appService.traerTipoTramites(body);
   }
 
+  @Post('/traertipossolicitantes')
+  traerTiposSolicitantes() {
+    return this.appService.traerTiposSolicitantes();
+  }
+
   @Post('/nuevotramite')
   guardartramite(@Body() body: any) {
     return this.appService.nuevoTramite(body);

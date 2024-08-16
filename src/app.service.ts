@@ -99,8 +99,55 @@ export class AppService {
     }
   }
 
-  nuevoTramite(body: any) {
-    return 'desde el servicio nuevo tramite';
+  async traerTiposSolicitantes() {
+    try {
+      let consulta = `SELECT * FROM tipoSolicitanteTramites `;
+      await sql.connect(config);
+      const result = await sql.query(consulta);
+      return result.recordsets[0];
+    } catch (err) {
+      return err;
+    }
+  }
+
+  async nuevoTramite(body: any) {
+    console.log(body.tramiteFechaIng.toLocaleString('es-ES'));
+    const {
+      idTipoTramite,
+      tramiteFechaIng,
+      tramiteFolio,
+      idTipoSolicitanteTramite,
+      descTramSolicitanteExterno,
+      dniSolicitanteAlumno,
+      observaciones,
+      idUsuarioAltaTramite,
+      idSectorAltaTramite,
+      idEstado,
+    } = body;
+
+    let pool = await sql.connect(config);
+    let result = await pool
+      .request()
+      .input('idTipoTramite', sql.Int, parseInt(idTipoTramite))
+      .input('tramiteFechaIng', sql.DateTime, tramiteFechaIng)
+      .input('tramiteFolio', sql.Int, tramiteFolio)
+      .input('idTipoSolicitanteTramite', sql.Int, idTipoSolicitanteTramite)
+      .input(
+        'descTramSolicitanteExterno',
+        sql.VarChar(100),
+        descTramSolicitanteExterno,
+      )
+      .input('dniSolicitanteAlumno', sql.Int, parseInt(dniSolicitanteAlumno))
+      .input('observaciones', sql.VarChar(500), observaciones)
+      .input('idUsuarioAltaTramite', sql.Int, parseInt(idUsuarioAltaTramite))
+      .input('idSectorAltaTramite', sql.Int, parseInt(idSectorAltaTramite))
+      .execute('sp_TramiteNuevo')
+      .catch((err) => {
+        console.log(err);
+        return err;
+      });
+
+    return result.recordsets[0];
   }
 
   nuevoPase(body: any) {
