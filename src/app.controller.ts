@@ -25,6 +25,11 @@ export class AppController {
     return this.appService.traerDatosSector(body);
   }
 
+  @Post('/traersectores')
+  traerSectores(@Body() body: any) {
+    return this.appService.traerSectores(body);
+  }
+
   @Post('/traersectoresporusuario')
   traersectoresporusuario(@Body() body: any) {
     return this.appService.traersectoresporusuario(body);
@@ -47,6 +52,11 @@ export class AppController {
   @Post('/nuevotramite')
   guardartramite(@Body() body: any) {
     return this.appService.nuevoTramite(body);
+  }
+
+  @Post('/traertramites')
+  traerTramites(@Body() body: any) {
+    return this.appService.traerTramites(body);
   }
 
   @Post('/nuevopase')

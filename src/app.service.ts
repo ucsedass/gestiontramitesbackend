@@ -76,6 +76,18 @@ export class AppService {
       return err;
     }
   }
+
+  async traerSectores(body) {
+    try {
+      let consulta = `select * from sectores where borrado = 0 `;
+      await sql.connect(config);
+      const result = await sql.query(consulta);
+      return result.recordsets[0];
+    } catch (error) {
+      return error;
+    }
+  }
+
   async traerClasesTramites(body: any) {
     try {
       let consulta = 'select * from claseTramites';
@@ -150,7 +162,40 @@ export class AppService {
     return result.recordsets[0];
   }
 
-  nuevoPase(body: any) {
-    return 'desde el servicio nuevo pase';
+  async traerTramites(body: any) {
+    console.log(body);
+    const { idSector } = body;
+    try {
+      let consulta = `SELECT        tramites.idTramite, tramites.tramiteNum, tramites.tramiteAño, tramites.tramiteFechaIng, tramites.idTipoTramite, tramites.tramiteFolio, tramites.idTipoSolicitanteTramite, tramites.descTramSolicitanteExterno, 
+                         tramites.dniSolicitanteAlumno, tramites.observaciones, tramites.idUsuarioAltaTramite, tramites.idSectorAltaTramite, tramites.idSectorActual, tramites.idEstado, tramites.borrado,
+                         estadoTramite.estadoDescripcion , tipoTramites.tramiteDescripcion
+FROM            tramites inner JOIN
+                         estadoTramite on estadoTramite.idEstado = tramites.idEstado
+                          inner join  tipoTramites on tramites.idTipoTramite = tipoTramites.idTipoTramite
+                         where idSectorActual = ${idSector} and borrado = 'False' order by tramites.idTramite `;
+      await sql.connect(config);
+      const result = await sql.query(consulta);
+      console.log(result.recordsets[0]);
+      return result.recordsets[0];
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  }
+
+  async nuevoPase(body: any) {
+    console.log('PARA EL NUEVO PASE:', body);
+    const { idTramite, idSectorDestino } = body;
+    let pool = await sql.connect(config);
+    let result = await pool
+      .request()
+      .input('idTramite', sql.Int, parseInt(idTramite))
+      .input('idSectorDestino', sql.Int, parseInt(idSectorDestino))
+      .execute('sp_paseNuevo')
+      .catch((err) => {
+        console.log(err);
+        return err;
+      });
+    return result.recordsets[0];
   }
 }
