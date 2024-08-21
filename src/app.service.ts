@@ -198,4 +198,20 @@ FROM            tramites inner JOIN
       });
     return result.recordsets[0];
   }
+
+  async cambiarEstadoTramite(body: any) {
+    console.log('Para cambiar:', body);
+    const { idTramite, nuevoEstadoTramite } = body;
+    let pool = await sql.connect(config);
+    let result = await pool
+      .request()
+      .input('idTramite', sql.Int, parseInt(idTramite))
+      .input('nuevoEstadoTramite', sql.Int, parseInt(nuevoEstadoTramite))
+      .execute('sp_cambiarEstadoTramite')
+      .catch((err) => {
+        console.log(err);
+        return err;
+      });
+    return result.recordsets[0];
+  }
 }

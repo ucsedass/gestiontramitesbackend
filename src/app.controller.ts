@@ -63,4 +63,9 @@ export class AppController {
   nuevoPase(@Body() body: any) {
     return this.appService.nuevoPase(body);
   }
+
+  @Post('/cambiarestadotramite')
+  cambiarEstadoTramite(@Body() body: any) {
+    return this.appService.cambiarEstadoTramite(body);
+  }
 }
