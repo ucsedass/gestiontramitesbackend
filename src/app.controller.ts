@@ -68,4 +68,14 @@ export class AppController {
   cambiarEstadoTramite(@Body() body: any) {
     return this.appService.cambiarEstadoTramite(body);
   }
+
+  @Post('/buscartramite')
+  buscarTramite(@Body() body: any) {
+    return this.appService.buscarTramite(body);
+  }
+
+  @Post('/buscarmovimientostramites')
+  buscarMovimientosTramites(@Body() body: any) {
+    return this.appService.buscarMovimientosTramites(body);
+  }
 }

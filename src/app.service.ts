@@ -185,12 +185,15 @@ FROM            tramites inner JOIN
 
   async nuevoPase(body: any) {
     console.log('PARA EL NUEVO PASE:', body);
-    const { idTramite, idSectorDestino } = body;
+    const { idTramite, idSectorDestino, idSectorOrigen, idUsuarioOrigen } =
+      body;
     let pool = await sql.connect(config);
     let result = await pool
       .request()
       .input('idTramite', sql.Int, parseInt(idTramite))
       .input('idSectorDestino', sql.Int, parseInt(idSectorDestino))
+      .input('idSectorOrigen', sql.Int, parseInt(idSectorOrigen))
+      .input('idUsuarioOrigen', sql.Int, parseInt(idUsuarioOrigen))
       .execute('sp_paseNuevo')
       .catch((err) => {
         console.log(err);
@@ -213,5 +216,52 @@ FROM            tramites inner JOIN
         return err;
       });
     return result.recordsets[0];
+  }
+
+  async buscarTramite(body: any) {
+    const { tramiteNum, tramiteAño } = body;
+    try {
+      let consulta = `SELECT * FROM tramites WHERE tramiteNum = ${tramiteNum} AND tramiteAño = ${tramiteAño} `;
+      await sql.connect(config);
+      const result = await sql.query(consulta);
+      return result.recordsets[0];
+    } catch (err) {
+      return err;
+    }
+  }
+
+  async buscarMovimientosTramites(body: any) {
+    console.log(body);
+    const { idTramite } = body;
+    try {
+      let consulta = `SELECT 
+idTramiteMovimiento,
+idTramite,
+fechaRealizaPaseTramite,
+idUsuarioRealizaPaseTramite,
+idSectorRealizaPaseTramite,
+fechaAceptaPaseTramite,
+idUsuarioAceptaPaseTramite,
+idSectorAceptaPaseTramite,
+observaciones,
+sectorpase.sectorDescripcion as sectorRealizaPaseDesc,
+usuarioRealizaPase.nombre as usuarioRealizaPaseDesc,
+sectoracepta.sectorDescripcion as sectorAceptaPaseDesc,
+usuarioAceptaPase.nombre as usuarioAceptaPaseDesc
+FROM tramitesMovimientos left join sectores as sectorpase
+on sectorpase.idSector = tramitesMovimientos.idSectorRealizaPaseTramite
+left join sectores as sectoracepta
+on sectoracepta.idSector = tramitesMovimientos.idSectorAceptaPaseTramite
+left join usuarios as usuarioRealizaPase
+on usuarioRealizaPase.idUsuario = tramitesMovimientos.idUsuarioRealizaPaseTramite
+left join usuarios as usuarioAceptaPase
+on usuarioAceptaPase.idUsuario = tramitesMovimientos.idUsuarioAceptaPaseTramite
+WHERE idTramite = ${idTramite} and tramitesMovimientos.borrado = 0`;
+      await sql.connect(config);
+      const result = await sql.query(consulta);
+      return result.recordsets[0];
+    } catch (err) {
+      return err;
+    }
   }
 }
