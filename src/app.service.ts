@@ -185,8 +185,13 @@ FROM            tramites inner JOIN
 
   async nuevoPase(body: any) {
     console.log('PARA EL NUEVO PASE:', body);
-    const { idTramite, idSectorDestino, idSectorOrigen, idUsuarioOrigen } =
-      body;
+    const {
+      idTramite,
+      idSectorDestino,
+      idSectorOrigen,
+      idUsuarioOrigen,
+      observaciones,
+    } = body;
     let pool = await sql.connect(config);
     let result = await pool
       .request()
@@ -194,7 +199,25 @@ FROM            tramites inner JOIN
       .input('idSectorDestino', sql.Int, parseInt(idSectorDestino))
       .input('idSectorOrigen', sql.Int, parseInt(idSectorOrigen))
       .input('idUsuarioOrigen', sql.Int, parseInt(idUsuarioOrigen))
+      .input('observaciones', sql.VarChar(500), observaciones)
       .execute('sp_paseNuevo')
+      .catch((err) => {
+        console.log(err);
+        return err;
+      });
+    return result.recordsets[0];
+  }
+
+  async aceptarPase(body: any) {
+    console.log('desde aceptar pase', body);
+    const { idTramite, nuevoEstadoTramite, idUsuarioDestino } = body;
+    let pool = await sql.connect(config);
+    let result = await pool
+      .request()
+      .input('idTramite', sql.Int, parseInt(idTramite))
+      .input('nuevoEstadoTramite', sql.Int, parseInt(nuevoEstadoTramite))
+      .input('idUsuariodestino', sql.Int, parseInt(idUsuarioDestino))
+      .execute('sp_aceptarPase')
       .catch((err) => {
         console.log(err);
         return err;
