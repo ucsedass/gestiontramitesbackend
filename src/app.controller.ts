@@ -83,4 +83,9 @@ export class AppController {
   buscarMovimientosTramites(@Body() body: any) {
     return this.appService.buscarMovimientosTramites(body);
   }
+
+  @Post('/traerdatostramite')
+  traerDatosTramite(@Body() body: any) {
+    return this.appService.traerDatosTramite(body);
+  }
 }

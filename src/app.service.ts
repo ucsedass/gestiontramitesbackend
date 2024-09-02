@@ -287,4 +287,45 @@ WHERE idTramite = ${idTramite} and tramitesMovimientos.borrado = 0`;
       return err;
     }
   }
+
+  async traerDatosTramite(body: any) {
+    console.log(body);
+    const { idTramite } = body;
+    try {
+      let consulta = `SELECT idTramite,tramiteNum, 
+tramiteAño, 
+tramites.idTipoTramite,
+tipoTramites.tramiteDescripcion,
+tramiteFechaIng, 
+tramiteFolio, 
+tramites.idTipoSolicitanteTramite,
+tipoSolicitanteTramites.tipoSolicitanteTramiteDescripcion
+descTramSolicitanteExterno,
+dniSolicitanteAlumno,
+observaciones,
+idUsuarioAltaTramite,
+usuarios.nombre,
+idSectorAltaTramite,
+sectoralta.sectorDescripcion as sectorAltaTramiteDesc,
+idSectorActual,
+sectoractual.sectorDescripcion as sectorActualTramiteDesc,
+tramites.idEstado,
+estadoTramite.estadoDescripcion
+FROM tramites
+left join sectores as sectoralta
+on sectoralta.idSector = tramites.idSectorAltaTramite
+left join sectores as sectoractual
+on sectoractual.idSector = tramites.idSectorActual
+inner join tipoTramites on tramites.idTipoTramite = tipoTramites.idTipoTramite
+inner join tipoSolicitanteTramites on tramites.idTipoSolicitanteTramite = tipoSolicitanteTramites.idTipoSolicitanteTramite
+inner join usuarios on tramites.idUsuarioAltaTramite = usuarios.idUsuario
+inner join estadoTramite on tramites.idEstado = estadoTramite.idEstado
+WHERE idTramite = ${idTramite}`;
+      await sql.connect(config);
+      const result = await sql.query(consulta);
+      return result.recordsets[0];
+    } catch (err) {
+      return err;
+    }
+  }
 }
