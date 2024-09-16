@@ -88,4 +88,14 @@ export class AppController {
   traerDatosTramite(@Body() body: any) {
     return this.appService.traerDatosTramite(body);
   }
+
+  @Post('/actualizardatostramite')
+  actualizarDatosTramite(@Body() body: any) {
+    return this.appService.actualizarDatosTramites(body);
+  }
+
+  @Post('/eliminartramite')
+  eliminarTramite(@Body() body: any) {
+    return this.appService.eliminarTramite(body);
+  }
 }

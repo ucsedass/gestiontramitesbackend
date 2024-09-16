@@ -244,7 +244,7 @@ FROM            tramites inner JOIN
   async buscarTramite(body: any) {
     const { tramiteNum, tramiteAño } = body;
     try {
-      let consulta = `SELECT * FROM tramites WHERE tramiteNum = ${tramiteNum} AND tramiteAño = ${tramiteAño} `;
+      let consulta = `SELECT * FROM tramites WHERE tramiteNum = ${tramiteNum} AND tramiteAño = ${tramiteAño} and borrado = 0 `;
       await sql.connect(config);
       const result = await sql.query(consulta);
       return result.recordsets[0];
@@ -296,10 +296,11 @@ WHERE idTramite = ${idTramite} and tramitesMovimientos.borrado = 0 order by idTr
 tramiteAño, 
 tramites.idTipoTramite,
 tipoTramites.tramiteDescripcion,
+tipoTramites.idClaseTramite,
 tramiteFechaIng, 
 tramiteFolio, 
 tramites.idTipoSolicitanteTramite,
-tipoSolicitanteTramites.tipoSolicitanteTramiteDescripcion
+tipoSolicitanteTramites.tipoSolicitanteTramiteDescripcion,
 descTramSolicitanteExterno,
 dniSolicitanteAlumno,
 observaciones,
@@ -327,5 +328,54 @@ WHERE idTramite = ${idTramite}`;
     } catch (err) {
       return err;
     }
+  }
+
+  async actualizarDatosTramites(body) {
+    console.log(body);
+    const {
+      idTramite,
+      idTipoTramite,
+      tramiteFechaIng,
+      tramiteFolio,
+      idTipoSolicitanteTramite,
+      descTramSolicitanteExterno,
+      dniSolicitanteAlumno,
+      observaciones,
+    } = body;
+    let pool = await sql.connect(config);
+    let result = await pool
+      .request()
+      .input('idTramite', sql.Int, parseInt(idTramite))
+      .input('idTipoTramite', sql.Int, parseInt(idTipoTramite))
+      .input('tramiteFechaIng', sql.DateTime, tramiteFechaIng)
+      .input('tramiteFolio', sql.Int, tramiteFolio)
+      .input('idTipoSolicitanteTramite', sql.Int, idTipoSolicitanteTramite)
+      .input(
+        'descTramSolicitanteExterno',
+        sql.VarChar(100),
+        descTramSolicitanteExterno,
+      )
+      .input('dniSolicitanteAlumno', sql.Int, parseInt(dniSolicitanteAlumno))
+      .input('observaciones', sql.VarChar(500), observaciones)
+      .execute('sp_actualizarDatosTramite')
+      .catch((err) => {
+        console.log(err);
+        return err;
+      });
+    return result.recordsets[0];
+  }
+  async eliminarTramite(body: any) {
+    console.log('Para cambiar:', body);
+    const { idTramite } = body;
+    let pool = await sql.connect(config);
+    let result = await pool
+      .request()
+      .input('idTramite', sql.Int, parseInt(idTramite))
+      .execute('sp_eliminarTramite')
+      .catch((err) => {
+        console.log(err);
+        return err;
+      });
+    return result.recordsets[0];
   }
 }
