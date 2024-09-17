@@ -378,4 +378,19 @@ WHERE idTramite = ${idTramite}`;
       });
     return result.recordsets[0];
   }
+
+  async eliminarUltimoMovimiento(body: any) {
+    console.log('Para cambiar:', body);
+    const { idTramite } = body;
+    let pool = await sql.connect(config);
+    let result = await pool
+      .request()
+      .input('idTramite', sql.Int, parseInt(idTramite))
+      .execute('sp_eliminarUltimoMovimiento')
+      .catch((err) => {
+        console.log(err);
+        return err;
+      });
+    return result.recordsets[0];
+  }
 }

@@ -98,4 +98,9 @@ export class AppController {
   eliminarTramite(@Body() body: any) {
     return this.appService.eliminarTramite(body);
   }
+
+  @Post('/eliminarultimomovimiento')
+  eliminarUltimoMovimiento(@Body() body: any) {
+    return this.appService.eliminarUltimoMovimiento(body);
+  }
 }
