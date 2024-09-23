@@ -267,6 +267,7 @@ fechaAceptaPaseTramite,
 idUsuarioAceptaPaseTramite,
 idSectorAceptaPaseTramite,
 observaciones,
+tramitesMovimientos.borrado,
 sectorpase.sectorDescripcion as sectorRealizaPaseDesc,
 usuarioRealizaPase.nombre as usuarioRealizaPaseDesc,
 sectoracepta.sectorDescripcion as sectorAceptaPaseDesc,
@@ -279,7 +280,7 @@ left join usuarios as usuarioRealizaPase
 on usuarioRealizaPase.idUsuario = tramitesMovimientos.idUsuarioRealizaPaseTramite
 left join usuarios as usuarioAceptaPase
 on usuarioAceptaPase.idUsuario = tramitesMovimientos.idUsuarioAceptaPaseTramite
-WHERE idTramite = ${idTramite} and tramitesMovimientos.borrado = 0 order by idTramiteMovimiento`;
+WHERE idTramite = ${idTramite}  order by idTramiteMovimiento`;
       await sql.connect(config);
       const result = await sql.query(consulta);
       return result.recordsets[0];
