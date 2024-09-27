@@ -267,6 +267,7 @@ fechaAceptaPaseTramite,
 idUsuarioAceptaPaseTramite,
 idSectorAceptaPaseTramite,
 observaciones,
+observacionesEliminacion,
 tramitesMovimientos.borrado,
 sectorpase.sectorDescripcion as sectorRealizaPaseDesc,
 usuarioRealizaPase.nombre as usuarioRealizaPaseDesc,
@@ -367,11 +368,16 @@ WHERE idTramite = ${idTramite}`;
   }
   async eliminarTramite(body: any) {
     console.log('Para cambiar:', body);
-    const { idTramite } = body;
+    const { idTramite, observacionesEliminacion } = body;
     let pool = await sql.connect(config);
     let result = await pool
       .request()
       .input('idTramite', sql.Int, parseInt(idTramite))
+      .input(
+        'observacionesEliminacion',
+        sql.VarChar(500),
+        observacionesEliminacion,
+      )
       .execute('sp_eliminarTramite')
       .catch((err) => {
         console.log(err);
@@ -382,11 +388,16 @@ WHERE idTramite = ${idTramite}`;
 
   async eliminarUltimoMovimiento(body: any) {
     console.log('Para cambiar:', body);
-    const { idTramite } = body;
+    const { idTramite, observacionesEliminacion } = body;
     let pool = await sql.connect(config);
     let result = await pool
       .request()
       .input('idTramite', sql.Int, parseInt(idTramite))
+      .input(
+        'observacionesEliminacion',
+        sql.VarChar(500),
+        observacionesEliminacion,
+      )
       .execute('sp_eliminarUltimoMovimiento')
       .catch((err) => {
         console.log(err);
