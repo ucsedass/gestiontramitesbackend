@@ -172,7 +172,7 @@ export class AppService {
 FROM            tramites inner JOIN
                          estadoTramite on estadoTramite.idEstado = tramites.idEstado
                           inner join  tipoTramites on tramites.idTipoTramite = tipoTramites.idTipoTramite
-                         where idSectorActual = ${idSector} and borrado = 'False' order by tramites.idTramite `;
+                         where idSectorActual = ${idSector}  order by tramites.idTramite `;
       await sql.connect(config);
       const result = await sql.query(consulta);
       console.log(result.recordsets[0]);
