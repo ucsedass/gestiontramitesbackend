@@ -405,4 +405,17 @@ WHERE idTramite = ${idTramite}`;
       });
     return result.recordsets[0];
   }
+
+  async buscarParticipante(data: any) {
+    console.log('Llegó al service:', data);
+    const { NroDoc } = data;
+    try {
+      let consulta = `select * from Participantes where  NroDoc = ${NroDoc}`;
+      await sql.connect(config);
+      const result = await sql.query(consulta);
+      return result.recordsets[0];
+    } catch (err) {
+      return err;
+    }
+  }
 }

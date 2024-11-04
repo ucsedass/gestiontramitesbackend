@@ -103,4 +103,9 @@ export class AppController {
   eliminarUltimoMovimiento(@Body() body: any) {
     return this.appService.eliminarUltimoMovimiento(body);
   }
+
+  @Post('/buscarparticipante')
+  buscarParticipante(@Body() body: any) {
+    return this.appService.buscarParticipante(body);
+  }
 }
