@@ -108,4 +108,11 @@ export class AppController {
   buscarParticipante(@Body() body: any) {
     return this.appService.buscarParticipante(body);
   }
+
+  /***********************************SISTEMAS EXTERNOS*******************************************/
+
+  @Post('/sistemaexterno/nuevotramite')
+  nuevoTramiteExterno(@Body() body: any) {
+    return this.appService.nuevoTramiteExterno(body);
+  }
 }
